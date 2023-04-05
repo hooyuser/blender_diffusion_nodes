@@ -43,8 +43,6 @@ def gen_draw_func(texture, image_size, para_func):
 
     def draw(context):
         scale, offset_x, offset_y = para_func(context)
-        # print(f'offset: {offset_x}, {offset_y}')
-        # print(f'scale: {scale}\n')
 
         shader.bind()
         shader.uniform_sampler("image", texture)
@@ -177,7 +175,8 @@ class ImageInputNode(bpy.types.Node):
                     tree.links.remove(link)
 
     def free(self):
-        SpaceNodeEditor.draw_handler_remove(
-            preview_handle_dict[self.unique_id], 'WINDOW')
-        tag_redraw_all_nodeviews()
-        del preview_handle_dict[self.unique_id]
+        if self.unique_id in preview_handle_dict:
+            SpaceNodeEditor.draw_handler_remove(
+                preview_handle_dict[self.unique_id], 'WINDOW')
+            tag_redraw_all_nodeviews()
+            del preview_handle_dict[self.unique_id]

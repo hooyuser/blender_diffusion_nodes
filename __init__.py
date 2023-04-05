@@ -19,7 +19,6 @@ bl_info = {
 }
 
 
-
 class CustomNodeCategory(nodeitems_utils.NodeCategory):
     # define the classmethod that tells blender which node tree
     #   the categories made with this class belong to (is visible to)
@@ -99,16 +98,15 @@ node_categories = [
     #                        nodeitems_utils.NodeItem("WhiteNoise",
     #                                                 label="White Noise"),
     #                    ]),
-    CustomNodeCategory("INPUT_NODES",
-                       "Input",
-                       items=[
-                           nodeitems_utils.NodeItem("FloatInput",
-                                                    label="Float"),
-                           nodeitems_utils.NodeItem("IntegerInput",
-                                                    label="Integer"),
-                           nodeitems_utils.NodeItem("ImageInput",
-                                                    label="Image"),
-                       ]),
+    CustomNodeCategory(
+        "INPUT_NODES",
+        "Input",
+        items=[
+            nodeitems_utils.NodeItem("FloatInput", label="Float"),
+            nodeitems_utils.NodeItem("IntegerInput", label="Integer"),
+            nodeitems_utils.NodeItem("ImageInput", label="Image"),
+            nodeitems_utils.NodeItem("TextInput", label="Text"),
+        ]),
     # CustomNodeCategory("OUTPUT_NODES",
     #                    "Output",
     #                    items=[
