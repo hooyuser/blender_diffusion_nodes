@@ -46,6 +46,30 @@ class BaseNodeSocket(object):
 #     def draw_color(self, context, node):
 #         return (1, 1, 1, 1)
 
+class DiffusionSocketCLIP(bpy.types.NodeSocket):
+    bl_idname = "DiffusionSocketCLIP"
+    bl_label = "Diffusion Node Socket CLIP"
+
+    def draw(self, context, layout, node, text):
+        layout.label(text='CLIP')
+
+    def draw_color(self, context, node):
+        return (0.82, 0.64, 1.0, 1)
+
+class DiffusionSocketText(bpy.types.NodeSocket):
+    bl_idname = "DiffusionSocketText"
+    bl_label = "Diffusion Node Socket Text"
+
+    default_value: bpy.props.StringProperty()
+
+    def draw(self, context, layout, node, text):
+        if self.is_output or self.is_linked:
+            layout.label(text=self.name)
+        else:
+            layout.prop(self, "default_value", text=self.name)
+
+    def draw_color(self, context, node):
+        return (0.77, 1.0, 0.84, 1)
 
 class SdfNodeSocketPositiveInt(bpy.types.NodeSocket, BaseNodeSocket):
     bl_idname = "SdfNodeSocketPositiveInt"

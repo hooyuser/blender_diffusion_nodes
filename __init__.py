@@ -106,6 +106,13 @@ node_categories = [
             nodeitems_utils.NodeItem("IntegerInput", label="Integer"),
             nodeitems_utils.NodeItem("ImageInput", label="Image"),
             nodeitems_utils.NodeItem("TextInput", label="Text"),
+            nodeitems_utils.NodeItem("StringInput", label="String"),
+        ]),
+    CustomNodeCategory(
+        "CONDITIONING_NODES",
+        "Conditioning",
+        items=[
+            nodeitems_utils.NodeItem("CLIPTextEncode", label="CLIP Text Encode"),
         ]),
     # CustomNodeCategory("OUTPUT_NODES",
     #                    "Output",
