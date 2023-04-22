@@ -4,6 +4,7 @@ import nodeitems_utils
 from . import auto_load
 from pathlib import Path
 
+
 bl_info = {
     "name": "Diffusion Nodes",
     "description": "Stable Diffusion Nodes for Blender",
@@ -52,11 +53,6 @@ node_categories = [
     #         #   properties
     #         #   NOTE: use 'repr()' to convert the value to string IMPORTANT
     #         nodeitems_utils.NodeItem("SphereSDF", label="Sphere"),
-    #         nodeitems_utils.NodeItem("BoxSDF", label="Box"),
-    #         nodeitems_utils.NodeItem("PlaneSDF", label="Plane"),
-    #         nodeitems_utils.NodeItem("TorusSDF", label="Torus"),
-    #         nodeitems_utils.NodeItem("CylinderSDF", label="Cylinder"),
-    #         nodeitems_utils.NodeItem("ConeSDF", label="Cone")
     #     ]),
     CustomNodeCategory(
         "INPUT_NODES",
@@ -82,7 +78,6 @@ node_categories = [
             nodeitems_utils.NodeItem(
                 "CLIPTextEncode", label="CLIP Text Encode"),
         ]),
-
 ]
 
 
@@ -93,18 +88,27 @@ def check_preference_base_path():
     bpy.context.preferences.addons[__name__].preferences.load_preferences()
 
 
-def custom_register_callback():
-    check_preference_base_path()
+def execute_nodetree_button(self, context):
+    if context.space_data.tree_type == 'DiffusionNodeTree':
+        layout = self.layout
+        # show text in header
+        row = layout.row(align=True)
+        row.scale_x = 1.0
+        row.label(text="      ")
+        row.operator("diffusion_node.execute_nodetree_op", text="Execute")
+        row.label(text="      ")
 
 
 def register():
     auto_load.register()
     nodeitems_utils.register_node_categories("CUSTOM_NODES", node_categories)
-    custom_register_callback()
+    bpy.types.NODE_HT_header.append(execute_nodetree_button)
+    check_preference_base_path()
     print("Registered Diffusion Nodes")
 
 
 def unregister():
     auto_load.unregister()
     nodeitems_utils.unregister_node_categories("CUSTOM_NODES")
+    bpy.types.NODE_HT_header.remove(execute_nodetree_button)
     print("Unregistered Diffusion Nodes")

@@ -33,16 +33,6 @@ class LoadCheckpointNode(bpy.types.Node):
     bl_label = 'Load Checkpoint'
     bl_icon = 'TEXT'
 
-    checkpoint_enum_list = [
-        ('0', '0', '0'),
-        ('1', '1', '1'),
-        ('2', '2', '2'),
-        ('3', '3', '3'),
-        ('4', '4', '4'),
-        ('5', '5', '5'),
-        ('6', '6', '6'),
-    ]
-
     checkpoint_enum: bpy.props.EnumProperty(
         items=checkpoint_items_callback,
         name='Checkpoint',
