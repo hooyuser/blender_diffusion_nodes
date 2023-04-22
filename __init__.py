@@ -2,7 +2,7 @@ import bpy
 import nodeitems_utils
 
 from . import auto_load
-
+from pathlib import Path
 
 bl_info = {
     "name": "Diffusion Nodes",
@@ -58,46 +58,6 @@ node_categories = [
     #         nodeitems_utils.NodeItem("CylinderSDF", label="Cylinder"),
     #         nodeitems_utils.NodeItem("ConeSDF", label="Cone")
     #     ]),
-    # CustomNodeCategory("OPERATION_NODES",
-    #                    "Operation",
-    #                    items=[
-    #                        nodeitems_utils.NodeItem("Transform",
-    #                                                 label="Transform"),
-    #                        nodeitems_utils.NodeItem("Round", label="Round"),
-    #                        nodeitems_utils.NodeItem("Solidify",
-    #                                                 label="Solidify"),
-    #                        nodeitems_utils.NodeItem("Array", label="Array"),
-    #                        nodeitems_utils.NodeItem("Mirror", label="Mirror"),
-    #                        nodeitems_utils.NodeItem("ClippedMirror",
-    #                                                 label="Clipped Mirror"),
-    #                        nodeitems_utils.NodeItem("Elongate",
-    #                                                 label="Elongate"),
-    #                        nodeitems_utils.NodeItem("Bend", label="Bend"),
-    #                        nodeitems_utils.NodeItem("Twist", label="Twist"),
-    #                    ]),
-    # CustomNodeCategory("CONSTRUCTION_NODES",
-    #                    "Construction",
-    #                    items=[
-    #                        nodeitems_utils.NodeItem("Bool", label="Bool"),
-    #                        nodeitems_utils.NodeItem("SmoothBool",
-    #                                                 label="Smooth Bool"),
-    #                        nodeitems_utils.NodeItem("Blend", label="Blend"),
-    #                    ]),
-    # CustomNodeCategory("MATERIAL_NODES",
-    #                    "Material",
-    #                    items=[
-    #                        nodeitems_utils.NodeItem("PBRMaterial", label="PBR Material"),
-    #                    ]),
-    # CustomNodeCategory("DISPLACEMENT_NODES",
-    #                    "Displacement",
-    #                    items=[
-    #                        nodeitems_utils.NodeItem("SimplexNoise",
-    #                                                 label="Simplex Noise"),
-    #                        nodeitems_utils.NodeItem("FbmNoise",
-    #                                                 label="FBM Noise"),
-    #                        nodeitems_utils.NodeItem("WhiteNoise",
-    #                                                 label="White Noise"),
-    #                    ]),
     CustomNodeCategory(
         "INPUT_NODES",
         "Input",
@@ -109,50 +69,38 @@ node_categories = [
             nodeitems_utils.NodeItem("StringInput", label="String"),
         ]),
     CustomNodeCategory(
+        "LOADERS_NODES",
+        "Loaders",
+        items=[
+            nodeitems_utils.NodeItem(
+                "LoadCheckpoint", label="Load Checkpoint"),
+        ]),
+    CustomNodeCategory(
         "CONDITIONING_NODES",
         "Conditioning",
         items=[
-            nodeitems_utils.NodeItem("CLIPTextEncode", label="CLIP Text Encode"),
+            nodeitems_utils.NodeItem(
+                "CLIPTextEncode", label="CLIP Text Encode"),
         ]),
-    # CustomNodeCategory("OUTPUT_NODES",
-    #                    "Output",
-    #                    items=[
-    #                        nodeitems_utils.NodeItem("Viewer", label="Viewer"),
-    #                    ]),
-    # CustomNodeCategory("MATH_NODES",
-    #                    "Math",
-    #                    items=[
-    #                        nodeitems_utils.NodeItem("FloatMath",
-    #                                                 label="Float Math"),
-    #                    ]),
-    # CustomNodeCategory(
-    #     "MISC_NODES",
-    #     "Misc",
-    #     items=[
-    #         # the nodes (items) in this category are instantiated in this list
-    #         #   with the 'nodeitems_utils.NodeItem' class, which can have
-    #         #   additional settings
-    #         # the first argument is the node class idname we want to add
-    #         # then there can be keyword arguments like label
-    #         # another argument can be a 'settings' keyword argument
-    #         #   that takes a dictionary that can override default values of all
-    #         #   properties
-    #         #   NOTE: use 'repr()' to convert the value to string IMPORTANT
-    #         nodeitems_utils.NodeItem("Add",
-    #                                  label="Add",
-    #                                  settings={"intProp": repr(1.0)}),
-    #         # minimalistic node addition is like this
-    #         # nodeitems_utils.NodeItem("CustomSimpleInputNode"),
-    #     ]),
+
 ]
 
 
 auto_load.init()
 
 
+def check_preference_base_path():
+    bpy.context.preferences.addons[__name__].preferences.load_preferences()
+
+
+def custom_register_callback():
+    check_preference_base_path()
+
+
 def register():
     auto_load.register()
     nodeitems_utils.register_node_categories("CUSTOM_NODES", node_categories)
+    custom_register_callback()
     print("Registered Diffusion Nodes")
 
 

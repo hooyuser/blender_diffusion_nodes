@@ -1,8 +1,9 @@
 import bpy
 
+
 class BaseNodeSocket(object):
     def default_value_callback(self, context):
-        pass # call after default_value is changed
+        pass  # call after default_value is changed
 
 
 #     socket_types = [("FLOAT", "Float", "Where your feet are"),
@@ -56,6 +57,29 @@ class DiffusionSocketCLIP(bpy.types.NodeSocket):
     def draw_color(self, context, node):
         return (0.82, 0.64, 1.0, 1)
 
+
+class DiffusionSocketModel(bpy.types.NodeSocket):
+    bl_idname = "DiffusionSocketModel"
+    bl_label = "Diffusion Node Socket Model"
+
+    def draw(self, context, layout, node, text):
+        layout.label(text='Model')
+
+    def draw_color(self, context, node):
+        return (0.62, 0.84, 0.8, 1)
+
+
+class DiffusionSocketVAE(bpy.types.NodeSocket):
+    bl_idname = "DiffusionSocketVAE"
+    bl_label = "Diffusion Node Socket VAE"
+
+    def draw(self, context, layout, node, text):
+        layout.label(text='VAE')
+
+    def draw_color(self, context, node):
+        return (0.32, 0.74, 0.2, 1)
+
+
 class DiffusionSocketText(bpy.types.NodeSocket):
     bl_idname = "DiffusionSocketText"
     bl_label = "Diffusion Node Socket Text"
@@ -70,6 +94,7 @@ class DiffusionSocketText(bpy.types.NodeSocket):
 
     def draw_color(self, context, node):
         return (0.77, 1.0, 0.84, 1)
+
 
 class SdfNodeSocketPositiveInt(bpy.types.NodeSocket, BaseNodeSocket):
     bl_idname = "SdfNodeSocketPositiveInt"
@@ -152,7 +177,8 @@ class SdfNodeSocketColor(bpy.types.NodeSocket, BaseNodeSocket):
     bl_idname = "SdfNodeSocketColor"
     bl_label = "SDF Node Socket Color"
 
-    default_value: bpy.props.FloatVectorProperty(default=(1.0, 1.0, 1.0),
+    default_value: bpy.props.FloatVectorProperty(
+        default=(1.0, 1.0, 1.0),
         subtype='COLOR', update=BaseNodeSocket.default_value_callback)
 
     # Optional function for drawing the socket input value

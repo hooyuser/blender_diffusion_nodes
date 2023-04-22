@@ -20,7 +20,6 @@ class StringInputNode(bpy.types.Node):
 
     def init(self, context):
         BaseNode.base_init(self, context)
-        self.index = -3
         self.outputs.new('DiffusionSocketText', "Text")
         self.width = BASIC_STRING_INPUT_NODE_WIDTH
 

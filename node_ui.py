@@ -17,7 +17,7 @@ class DiffusionNodeTree(bpy.types.NodeTree):
 
 class DiffusionNodePanel(bpy.types.Panel):
     bl_label = "Diffusion Nodes"
-    bl_idname = "Diffusion_PT_NODE_PANEL"
+    bl_idname = "DIFFUSION_PT_NODE_PANEL"
     bl_space_type = "NODE_EDITOR"
     bl_region_type = 'UI'
     bl_category = "Node Tree"

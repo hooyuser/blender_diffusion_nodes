@@ -9,7 +9,7 @@ from typing import Optional, Any
 from ldm.modules.diffusionmodules.util import checkpoint
 from .sub_quadratic_attention import efficient_dot_product_attention
 
-import model_management
+from comfy import model_management
 
 from . import tomesd
 
@@ -20,6 +20,8 @@ if model_management.xformers_enabled():
 # CrossAttn precision handling
 import os
 _ATTN_PRECISION = os.environ.get("ATTN_PRECISION", "fp32")
+
+from cli_args import args
 
 def exists(val):
     return val is not None
@@ -474,7 +476,6 @@ class CrossAttentionPytorch(nn.Module):
 
         return self.to_out(out)
 
-import sys
 if model_management.xformers_enabled():
     print("Using xformers cross attention")
     CrossAttention = MemoryEfficientCrossAttention
@@ -482,7 +483,7 @@ elif model_management.pytorch_attention_enabled():
     print("Using pytorch cross attention")
     CrossAttention = CrossAttentionPytorch
 else:
-    if "--use-split-cross-attention" in sys.argv:
+    if args.use_split_cross_attention:
         print("Using split optimization for cross attention")
         CrossAttention = CrossAttentionDoggettx
     else:
@@ -509,6 +510,14 @@ class BasicTransformerBlock(nn.Module):
         return checkpoint(self._forward, (x, context, transformer_options), self.parameters(), self.checkpoint)
 
     def _forward(self, x, context=None, transformer_options={}):
+        current_index = None
+        if "current_index" in transformer_options:
+            current_index = transformer_options["current_index"]
+        if "patches" in transformer_options:
+            transformer_patches = transformer_options["patches"]
+        else:
+            transformer_patches = {}
+
         n = self.norm1(x)
         if "tomesd" in transformer_options:
             m, u = tomesd.get_functions(x, transformer_options["tomesd"]["ratio"], transformer_options["original_shape"])
@@ -517,11 +526,19 @@ class BasicTransformerBlock(nn.Module):
             n = self.attn1(n, context=context if self.disable_self_attn else None)
 
         x += n
+        if "middle_patch" in transformer_patches:
+            patch = transformer_patches["middle_patch"]
+            for p in patch:
+                x = p(current_index, x)
+
         n = self.norm2(x)
         n = self.attn2(n, context=context)
 
         x += n
         x = self.ff(self.norm3(x)) + x
+
+        if current_index is not None:
+            transformer_options["current_index"] += 1
         return x
 
 
