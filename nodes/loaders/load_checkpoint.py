@@ -26,7 +26,7 @@ def checkpoint_items_callback(scene, context):
     return [(str(i), filename.stem, filename.name) for i, filename in enumerate(files)]
 
 
-class LoadCheckpointNode(bpy.types.Node):
+class LoadCheckpointNode(bpy.types.Node, BaseNode):
     '''A Load checkpoint node'''
 
     bl_idname = 'LoadCheckpoint'

@@ -2,7 +2,6 @@ import bpy
 import nodeitems_utils
 
 from . import auto_load
-from pathlib import Path
 
 
 bl_info = {
@@ -77,6 +76,13 @@ node_categories = [
         items=[
             nodeitems_utils.NodeItem(
                 "CLIPTextEncode", label="CLIP Text Encode"),
+        ]),
+    CustomNodeCategory(
+        "MISC_NODES",
+        "Misc",
+        items=[
+            nodeitems_utils.NodeItem(
+                "FloatMath", label="Float Math"),
         ]),
 ]
 

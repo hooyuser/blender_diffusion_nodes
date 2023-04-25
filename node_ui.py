@@ -15,16 +15,6 @@ class DiffusionNodeTree(bpy.types.NodeTree):
     bl_icon = 'SCRIPTPLUGINS'
 
 
-class ExecuteNodetreeOp(bpy.types.Operator):
-    bl_idname = "diffusion_node.execute_nodetree_op"
-    bl_label = "My Operator"
-
-    def execute(self, context):
-        # Code to run when the button is clicked
-        print("start executing")
-        return {'FINISHED'}
-
-
 class DiffusionNodePanel(bpy.types.Panel):
     bl_label = "Diffusion Nodes"
     bl_idname = "DIFFUSION_PT_NODE_PANEL"

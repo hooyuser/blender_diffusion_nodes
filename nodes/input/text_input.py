@@ -5,7 +5,7 @@ from ...base_types.base_node import BaseNode
 BASIC_TEXT_INPUT_NODE_WIDTH = 200
 
 
-class TextInputNode(bpy.types.Node):
+class TextInputNode(bpy.types.Node, BaseNode):
     '''An text input node'''
 
     bl_idname = 'TextInput'

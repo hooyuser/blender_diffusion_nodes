@@ -21,18 +21,9 @@ class CLIPTextEncodeNode(bpy.types.Node):
         self.index = -3
         self.inputs.new('DiffusionSocketCLIP', "CLIP")
         self.inputs.new('DiffusionSocketText', "Text")
-        self.outputs.new('SdfNodeSocketPositiveInt', "Conditioning")
+        self.outputs.new('DiffusionSocketPositiveInt', "Conditioning")
         self.width = BASIC_CLIP_TEXT_ENCODE_NODE_WIDTH
 
-    #def draw_buttons(self, context, layout):
+    # def draw_buttons(self, context, layout):
         # create a slider for int values
-        #layout.prop(self, 'text', text='Text')
-
-        # def update(self):
-        #     if self.outputs[0].links:
-        #         tree = bpy.context.space_data.edit_tree
-        #         for link in self.outputs[0].links:
-        #             if link.to_socket.bl_idname in int_category:
-        #                 link.to_socket.default_value = self.value
-        #             else:
-        #                 tree.links.remove(link)
+        # layout.prop(self, 'text', text='Text')

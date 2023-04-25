@@ -6,12 +6,6 @@ from ...base_types.base_node import BaseNode
 from ...preview_shader import create_preview_shader
 from bpy.types import SpaceNodeEditor
 
-int_category = [
-    'SdfNodeSocketPositiveInt', 'SdfNodeSocketFloat',
-    'SdfNodeSocketPositiveFloat'
-]
-
-#bpy.data.node_groups['Diffusion Nodes'].nodes['Image'].location = (0, 0)
 
 preview_handle_dict = dict()
 
@@ -66,7 +60,7 @@ def tag_redraw_all_nodeviews():
                         region.tag_redraw()
 
 
-class ImageInputNode(bpy.types.Node):
+class ImageInputNode(bpy.types.Node, BaseNode):
     '''An integer input node'''
 
     bl_idname = 'ImageInput'
@@ -123,19 +117,21 @@ class ImageInputNode(bpy.types.Node):
     def recreate_preview(self, context):
         if self.enabled_preview:
             SpaceNodeEditor.draw_handler_remove(
-                    preview_handle_dict[self.unique_id], 'WINDOW')
+                preview_handle_dict[self.unique_id], 'WINDOW')
             draw_func = gen_draw_func(
-                    texture=gpu.texture.from_image(self.image),
-                    image_size=self.image.size,
-                    para_func=lambda
-                    context: self.get_preview_parameters(context),)
+                texture=gpu.texture.from_image(self.image),
+                image_size=self.image.size,
+                para_func=lambda
+                context: self.get_preview_parameters(context),)
 
             preview_handle_dict[self.unique_id] = SpaceNodeEditor.draw_handler_add(
                 draw_func, (context,), 'WINDOW', 'POST_VIEW')
             tag_redraw_all_nodeviews()
 
-    image: bpy.props.PointerProperty(type=bpy.types.Image, update=recreate_preview)
-    texture: bpy.props.PointerProperty(type=bpy.types.ImageTexture, update=recreate_preview)
+    image: bpy.props.PointerProperty(
+        type=bpy.types.Image, update=recreate_preview)
+    texture: bpy.props.PointerProperty(
+        type=bpy.types.ImageTexture, update=recreate_preview)
 
     enabled_preview: bpy.props.BoolProperty(name="Enabled_collision",
                                             default=False,
@@ -151,7 +147,7 @@ class ImageInputNode(bpy.types.Node):
         self.texture = bpy.data.textures.new(
             f"preview_texture_{self.unique_id}", type='IMAGE')
         self.index = -3
-        self.outputs.new('SdfNodeSocketPositiveInt', "Value")
+        self.outputs.new('DiffusionSocketPositiveInt', "Value")
         self.width = BASIC_NODE_WIDTH
 
     def draw_buttons(self, context, layout):
@@ -163,16 +159,6 @@ class ImageInputNode(bpy.types.Node):
         layout.prop(self, "enabled_preview", text="Preview")
         if self.enabled_preview:
             layout.prop(self, "preview_scale", text="Preview Scale")
-        #layout.prop(self, 'value', text='Integer')
-
-    def update(self):
-        if self.outputs[0].links:
-            tree = bpy.context.space_data.edit_tree
-            for link in self.outputs[0].links:
-                if link.to_socket.bl_idname in int_category:
-                    link.to_socket.default_value = self.value
-                else:
-                    tree.links.remove(link)
 
     def free(self):
         if self.unique_id in preview_handle_dict:

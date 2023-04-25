@@ -1,6 +1,19 @@
 import bpy
 
 
+def socket_types_compatible(from_type, to_type):
+    # Replace this with your conversion rules
+    compatible_types = {
+        'DiffusionSocketCLIP': ['DiffusionSocketCLIP'],
+        'DiffusionSocketModel': ['DiffusionSocketModel'],
+        'DiffusionSocketVAE': ['DiffusionSocketVAE'],
+        'DiffusionSocketText': ['DiffusionSocketText'],
+        'DiffusionSocketFloat': ['DiffusionSocketFloat'],
+        'DiffusionSocketPositiveInt': ['DiffusionSocketPositiveInt', 'DiffusionSocketFloat'],
+    }
+    return to_type in compatible_types[from_type]
+
+
 class UniqueIdManager:
     # Static private member variable
     _max_id = -1
@@ -20,30 +33,30 @@ class BaseNode(object):
     bpy.types.Node.coll_index = bpy.props.IntProperty()
     # index = -1: to be searched. index = -2: will not be searched
 
-    #bpy.types.Node.ref_num = bpy.props.IntProperty()
-    #bpy.types.Node.coll_ref_num = bpy.props.IntProperty()
+    # bpy.types.Node.ref_num = bpy.props.IntProperty()
+    # bpy.types.Node.coll_ref_num = bpy.props.IntProperty()
     # ref_num actually equals the referencing number - 1
 
-    #bpy.types.Node.coll_para_idx = bpy.props.IntProperty()
+    # bpy.types.Node.coll_para_idx = bpy.props.IntProperty()
     # the index of the first parameter of a node
     bpy.types.Node.unique_id = bpy.props.IntProperty()
 
     @classmethod
     def poll(cls, ntree):
-        return ntree.bl_idname == 'SDFNodeTree'
+        return ntree.bl_idname == 'DiffusionNodeTree'
 
     def base_init(self, context):
         self.unique_id = UniqueIdManager.get_id()
 
-    # def update(self):
-    #     if self.outputs:
-    #         tree = bpy.context.space_data.edit_tree
-    #         if self.outputs[0].links:
-    #             for link in self.outputs[0].links:
-    #                 to_node = link.to_node
-    #                 if link.to_socket.bl_idname != 'NodeSocketFloat':
-    #                     tree.links.remove(link)
-    #                     tree.links.new(self.outputs[0],
-    #                                    to_node.inputs[-1]).is_valid = True
+    def update(self):
+        if self.outputs:
+            tree = bpy.context.space_data.edit_tree
+            for output_socket in self.outputs:
+                for link in output_socket.links:
+                    input_socket = link.to_socket
+                    if not socket_types_compatible(output_socket.bl_idname, input_socket.bl_idname):
+                        tree.links.remove(link)
+                        # tree.links.new(self.outputs[0],
+                        #             to_node.inputs[-1]).is_valid = True
 
         # self.last_update = self
