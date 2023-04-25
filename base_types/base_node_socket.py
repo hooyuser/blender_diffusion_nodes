@@ -2,6 +2,12 @@ import bpy
 
 
 class BaseNodeSocket(object):
+    connected_output_index: bpy.props.IntProperty(default=-1)
+    # bpy.types.NodeSocket.connected_output_index = -1: not connected
+
+    def __init__(self):
+        self.connected_output_index = -1
+
     def default_value_callback(self, context):
         pass  # call after default_value is changed
 
@@ -47,7 +53,18 @@ class BaseNodeSocket(object):
 #     def draw_color(self, context, node):
 #         return (1, 1, 1, 1)
 
-class DiffusionSocketCLIP(bpy.types.NodeSocket):
+class DiffusionSocketGeneral(bpy.types.NodeSocket, BaseNodeSocket):
+    bl_idname = "DiffusionSocketGeneral"
+    bl_label = "Diffusion Node Socket General"
+
+    def draw(self, context, layout, node, text):
+        layout.label(text=text)
+
+    def draw_color(self, context, node):
+        return (0.82, 0.82, 0.82, 1)
+
+
+class DiffusionSocketCLIP(bpy.types.NodeSocket, BaseNodeSocket):
     bl_idname = "DiffusionSocketCLIP"
     bl_label = "Diffusion Node Socket CLIP"
 
@@ -58,7 +75,7 @@ class DiffusionSocketCLIP(bpy.types.NodeSocket):
         return (0.82, 0.64, 1.0, 1)
 
 
-class DiffusionSocketModel(bpy.types.NodeSocket):
+class DiffusionSocketModel(bpy.types.NodeSocket, BaseNodeSocket):
     bl_idname = "DiffusionSocketModel"
     bl_label = "Diffusion Node Socket Model"
 
@@ -69,7 +86,7 @@ class DiffusionSocketModel(bpy.types.NodeSocket):
         return (0.62, 0.84, 0.8, 1)
 
 
-class DiffusionSocketVAE(bpy.types.NodeSocket):
+class DiffusionSocketVAE(bpy.types.NodeSocket, BaseNodeSocket):
     bl_idname = "DiffusionSocketVAE"
     bl_label = "Diffusion Node Socket VAE"
 
@@ -80,7 +97,18 @@ class DiffusionSocketVAE(bpy.types.NodeSocket):
         return (0.32, 0.74, 0.2, 1)
 
 
-class DiffusionSocketText(bpy.types.NodeSocket):
+class DiffusionSocketConditioning(bpy.types.NodeSocket, BaseNodeSocket):
+    bl_idname = "DiffusionSocketConditioning"
+    bl_label = "Diffusion Node Socket Conditioning"
+
+    def draw(self, context, layout, node, text):
+        layout.label(text='Conditioning')
+
+    def draw_color(self, context, node):
+        return (0.25, 0.14, 0.59, 1)
+
+
+class DiffusionSocketText(bpy.types.NodeSocket, BaseNodeSocket):
     bl_idname = "DiffusionSocketText"
     bl_label = "Diffusion Node Socket Text"
 

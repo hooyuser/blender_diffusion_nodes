@@ -10,12 +10,12 @@ class FloatInputNode(bpy.types.Node, BaseNode):
     bl_label = 'Float'
     bl_icon = 'FILE_FONT'
 
-    def update_prop(self, context):
-        for link in self.outputs[0].links:
-            link.to_socket.default_value = self.value
+    # def update_prop(self, context):
+    #     for link in self.outputs[0].links:
+    #         link.to_socket.default_value = self.value
             # Draw.update_callback(update_node=link.to_node)
 
-    value: bpy.props.FloatProperty(update=update_prop)
+    value: bpy.props.FloatProperty()
 
     def init(self, context):
         BaseNode.base_init(self, context)

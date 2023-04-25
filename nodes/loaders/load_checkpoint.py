@@ -31,7 +31,7 @@ class LoadCheckpointNode(bpy.types.Node, BaseNode):
 
     bl_idname = 'LoadCheckpoint'
     bl_label = 'Load Checkpoint'
-    bl_icon = 'TEXT'
+    bl_icon = 'ASSET_MANAGER'
 
     checkpoint_enum: bpy.props.EnumProperty(
         items=checkpoint_items_callback,

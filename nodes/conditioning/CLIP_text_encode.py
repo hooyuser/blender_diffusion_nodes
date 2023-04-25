@@ -21,7 +21,7 @@ class CLIPTextEncodeNode(bpy.types.Node):
         self.index = -3
         self.inputs.new('DiffusionSocketCLIP', "CLIP")
         self.inputs.new('DiffusionSocketText', "Text")
-        self.outputs.new('DiffusionSocketPositiveInt', "Conditioning")
+        self.outputs.new('DiffusionSocketConditioning', "Conditioning")
         self.width = BASIC_CLIP_TEXT_ENCODE_NODE_WIDTH
 
     # def draw_buttons(self, context, layout):

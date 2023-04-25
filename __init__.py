@@ -83,6 +83,8 @@ node_categories = [
         items=[
             nodeitems_utils.NodeItem(
                 "FloatMath", label="Float Math"),
+            nodeitems_utils.NodeItem(
+                "Print", label="Print"),
         ]),
 ]
 

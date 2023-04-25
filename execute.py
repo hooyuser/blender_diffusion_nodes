@@ -19,8 +19,9 @@ def topological_sort(node_vectors):
                 current_node = stack[-1]
                 visited.add(current_node)
                 unvisited_neighbor = None
-                for output in current_node.outputs:
+                for output_idx, output in enumerate(current_node.outputs):
                     for link in output.links:
+                        link.to_socket.connected_output_index = output_idx
                         if link.to_node not in visited:
                             unvisited_neighbor = link.to_node
                             break
@@ -46,5 +47,7 @@ class ExecuteNodetreeOp(bpy.types.Operator):
         node_vectors = topological_sort(node_tree.nodes)
         for i, node in enumerate(node_vectors):
             print(f'{i}: executing node {node.name}')
+            for input_socket in node.inputs:
+                print(f'input socket {input_socket.name}: {input_socket.connected_output_index}')
             # node.execute(context)
         return {'FINISHED'}

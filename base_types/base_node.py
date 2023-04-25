@@ -1,16 +1,26 @@
 import bpy
 
 
-def socket_types_compatible(from_type, to_type):
-    # Replace this with your conversion rules
+def generate_type_conversion_rules():
     compatible_types = {
         'DiffusionSocketCLIP': ['DiffusionSocketCLIP'],
         'DiffusionSocketModel': ['DiffusionSocketModel'],
         'DiffusionSocketVAE': ['DiffusionSocketVAE'],
         'DiffusionSocketText': ['DiffusionSocketText'],
-        'DiffusionSocketFloat': ['DiffusionSocketFloat'],
-        'DiffusionSocketPositiveInt': ['DiffusionSocketPositiveInt', 'DiffusionSocketFloat'],
+        'DiffusionSocketFloat': ['DiffusionSocketFloat', 'DiffusionSocketText'],
+        'DiffusionSocketPositiveInt':
+            ['DiffusionSocketPositiveInt', 'DiffusionSocketFloat', 'DiffusionSocketText'],
     }
+
+    for k, v in compatible_types.items():
+        compatible_types[k].append('DiffusionSocketGeneral')
+    return compatible_types
+
+
+compatible_types = generate_type_conversion_rules()
+
+
+def socket_types_compatible(from_type, to_type):
     return to_type in compatible_types[from_type]
 
 
@@ -41,6 +51,15 @@ class BaseNode(object):
     # the index of the first parameter of a node
     bpy.types.Node.unique_id = bpy.props.IntProperty()
 
+    @staticmethod
+    def initialze(init_func):
+        def new_init(self, context):
+            # your custom code here
+            print("Custom initialization")
+            # call the original init function
+            init_func(self, context)
+        return new_init
+
     @classmethod
     def poll(cls, ntree):
         return ntree.bl_idname == 'DiffusionNodeTree'
@@ -54,7 +73,8 @@ class BaseNode(object):
             for output_socket in self.outputs:
                 for link in output_socket.links:
                     input_socket = link.to_socket
-                    if not socket_types_compatible(output_socket.bl_idname, input_socket.bl_idname):
+                    if not socket_types_compatible(
+                            output_socket.bl_idname, input_socket.bl_idname):
                         tree.links.remove(link)
                         # tree.links.new(self.outputs[0],
                         #             to_node.inputs[-1]).is_valid = True
