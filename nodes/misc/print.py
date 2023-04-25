@@ -13,3 +13,6 @@ class PrintNode(bpy.types.Node, BaseNode):
     def init(self, context):
         BaseNode.base_init(self, context)
         self.inputs.new('DiffusionSocketGeneral', "Input")
+
+    def compute(self, x):
+        print(x)

@@ -1,5 +1,7 @@
 import bpy
 import nodeitems_utils
+import os
+import sys
 
 from . import auto_load
 
@@ -17,6 +19,10 @@ bl_info = {
     "support": "COMMUNITY",
     "category": "Node"
 }
+
+bundle_path = os.path.join(os.path.dirname(__file__), 'bundle_packages')
+if bundle_path not in sys.path:
+    sys.path.insert(0, bundle_path)
 
 
 class CustomNodeCategory(nodeitems_utils.NodeCategory):

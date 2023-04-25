@@ -70,16 +70,10 @@ class FloatMathNode(bpy.types.Node, BaseNode):
             self.inputs[1].hide = False
         # self.evaluate(self.operation)
 
-    # def update_value(self, context):
-    #     for link in self.outputs[0].links:
-    #         link.to_socket.default_value = self.value
-
     operation: bpy.props.EnumProperty(name="Operation",
                                       default="ADD",
                                       items=operationItems,
                                       update=update_operation)
-
-    #value: bpy.props.FloatProperty(update=update_value)
 
     def init(self, context):
         BaseNode.base_init(self, context)
@@ -92,3 +86,6 @@ class FloatMathNode(bpy.types.Node, BaseNode):
 
     def draw_label(self):
         return self.operationLabels[self.operation]
+
+    def compute(self, x, y):
+        return (self.operationFunctions[self.operation](x, y),)
