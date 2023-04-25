@@ -9,32 +9,25 @@ def get_custom_nodes(context):
 
 def topological_sort(node_vectors):
     sorted_nodes = []
+    stack = []
     visited = set()
-
-    def dfs_iterative(node):
-        stack = [node]
-
-        while stack:
-            current_node = stack[-1]
-
-            if current_node not in visited:
-                visited.add(current_node)
-                unvisited_outputs = [
-                    link.to_node
-                    for output in current_node.outputs for link in output.links
-                    if link.to_node not in visited]
-
-                if unvisited_outputs:
-                    stack.extend(unvisited_outputs)
-                else:
-                    sorted_nodes.append(current_node)
-                    stack.pop()
-            else:
-                stack.pop()
 
     for node in node_vectors:
         if node not in visited:
-            dfs_iterative(node)
+            stack.append(node)
+            while stack:
+                current_node = stack[-1]
+                visited.add(current_node)
+                unvisited_neighbor = None
+                for output in current_node.outputs:
+                    for link in output.links:
+                        if link.to_node not in visited:
+                            unvisited_neighbor = link.to_node
+                            break
+                if unvisited_neighbor is None:
+                    sorted_nodes.append(stack.pop())
+                else:
+                    stack.append(unvisited_neighbor)
 
     return sorted_nodes[::-1]
 
