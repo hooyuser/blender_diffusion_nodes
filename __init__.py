@@ -20,9 +20,51 @@ bl_info = {
     "category": "Node"
 }
 
+install_dependencies = False
+if install_dependencies:
+    import subprocess
+
+    bundle_dir = "bundle_packages"
+    requirements_file = "requirements.txt"
+    python_path = sys.executable
+
+    print(f"Installing packages from {requirements_file} into {bundle_dir} ...")
+
+    # Set the package names and URL
+    packages = ['torch', 'torchvision', 'torchaudio']
+    index_url = 'https://download.pytorch.org/whl/cu118'
+
+    # Construct the pip3 command
+    pip_cmd = ['pip3', 'install', '--upgrade', '-t', bundle_dir] + packages + ['--index-url', index_url]
+
+    # Run the pip3 command using subprocess
+    subprocess.call(pip_cmd)
+
+    # subprocess.call([
+    #     python_path,
+    #     "-m",
+    #     "pip",
+    #     "install",
+    #     "-r",
+    #     requirements_file,
+    #     "-t",
+    #     bundle_dir
+    # ])
+
+# print("Done.")
+# input("Press Enter to continue...") # equivalent of 'pause' command
+
 bundle_path = os.path.join(os.path.dirname(__file__), 'bundle_packages')
+comfy_path = os.path.join(os.path.dirname(__file__), 'comfy')
+base_path = os.path.dirname(__file__)
 if bundle_path not in sys.path:
+    # insert at the end to give it lowest priority
     sys.path.insert(0, bundle_path)
+    sys.path.insert(0, comfy_path)
+    sys.path.insert(0, base_path)
+
+for p in sys.path:
+    print(p)
 
 
 class CustomNodeCategory(nodeitems_utils.NodeCategory):

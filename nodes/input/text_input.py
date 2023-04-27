@@ -28,4 +28,7 @@ class TextInputNode(bpy.types.Node, BaseNode):
         # create a slider for int values
         # layout.prop(self, 'text', text='Text')
         layout.template_ID(self, "text", new="text.new",
-                        unlink="text.unlink", open="text.open")
+                           unlink="text.unlink", open="text.open")
+
+    def compute(self, *args):
+        return (self.text.as_string(),)

@@ -25,3 +25,6 @@ class IntegerInputNode(bpy.types.Node, BaseNode):
     def draw_buttons(self, context, layout):
         # create a slider for int values
         layout.prop(self, 'value', text='Integer')
+
+    def compute(self, *args):
+        return (self.value,)

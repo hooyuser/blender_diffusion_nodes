@@ -17,4 +17,4 @@ class PrintNode(bpy.types.Node, BaseNode):
     def compute(self, x):
         linked_node = self.inputs[0].links[0].from_node
         linked_socket = self.inputs[0].links[0].from_socket
-        print(f'Print result for "{linked_node.name}" - "{linked_socket.name}"\n{x}\n')
+        print(f'Print result for Node "{linked_node.name}" - Socket "{linked_socket.name}"\n{x}\n')

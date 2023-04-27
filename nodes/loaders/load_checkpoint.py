@@ -1,15 +1,16 @@
 import bpy
 
 from ...base_types.base_node import BaseNode
+from comfy.sd import load_checkpoint_guess_config
 
 from pathlib import Path
 
 BASIC_CHECKPOINT_LOADER_NODE_WIDTH = 300
 
 
-def checkpoint_items_callback(scene, context):
+def get_checkpoint_file_paths():
     # Your code to refresh the nodes goes here
-    addon_prefs = context.preferences.addons["blender_diffusion_nodes"].preferences
+    addon_prefs = bpy.context.preferences.addons["blender_diffusion_nodes"].preferences
     asset_base_path = Path(addon_prefs.base_dir)
     checkpoint_path = Path(addon_prefs.checkpoint_dir)
 
@@ -23,6 +24,11 @@ def checkpoint_items_callback(scene, context):
     # sort the files
     files.sort(key=lambda x: x.stem, reverse=True)
 
+    return files
+
+
+def checkpoint_items_callback(scene, context):
+    files = get_checkpoint_file_paths()
     return [(str(i), filename.stem, filename.name) for i, filename in enumerate(files)]
 
 
@@ -50,3 +56,10 @@ class LoadCheckpointNode(bpy.types.Node, BaseNode):
         # add row
         row = layout.row()
         row.prop(self, 'checkpoint_enum', text='Checkpoint')
+
+    def compute(self, *args):
+        checkpoint_path = get_checkpoint_file_paths()[
+            int(self.checkpoint_enum)]
+        result = load_checkpoint_guess_config(str(checkpoint_path))
+        # model, clip, vae, ignore clipvision
+        return (result[0], result[1], result[2])

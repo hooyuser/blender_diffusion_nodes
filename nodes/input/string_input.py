@@ -26,3 +26,6 @@ class StringInputNode(bpy.types.Node, BaseNode):
     def draw_buttons(self, context, layout):
         # create a slider for int values
         layout.prop(self, 'string_text', text='Text')
+
+    def compute(self, *args):
+        return (self.string_text,)
