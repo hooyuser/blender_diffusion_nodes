@@ -55,16 +55,18 @@ if install_dependencies:
 # input("Press Enter to continue...") # equivalent of 'pause' command
 
 bundle_path = os.path.join(os.path.dirname(__file__), 'bundle_packages')
-comfy_path = os.path.join(os.path.dirname(__file__), 'comfy')
+comfy_path = os.path.join(os.path.dirname(__file__), 'ComfyUI')
+comfy_path2 = os.path.join(os.path.dirname(__file__), "ComfyUI", "comfy")
 base_path = os.path.dirname(__file__)
 if bundle_path not in sys.path:
     # insert at the end to give it lowest priority
     sys.path.insert(0, bundle_path)
     sys.path.insert(0, comfy_path)
+    sys.path.insert(0, comfy_path2)
     sys.path.insert(0, base_path)
 
-for p in sys.path:
-    print(p)
+# for p in sys.path:
+#     print(p)
 
 
 class CustomNodeCategory(nodeitems_utils.NodeCategory):
@@ -124,6 +126,20 @@ node_categories = [
         items=[
             nodeitems_utils.NodeItem(
                 "CLIPTextEncode", label="CLIP Text Encode"),
+        ]),
+    CustomNodeCategory(
+        "SAMPLER_NODES",
+        "Sampler",
+        items=[
+            nodeitems_utils.NodeItem(
+                "KSampler", label="K Sampler"),
+        ]),
+    CustomNodeCategory(
+        "LATENT_NODES",
+        "Latent",
+        items=[
+            nodeitems_utils.NodeItem(
+                "EmptyLatentImage", label="Empty Latent Image"),
         ]),
     CustomNodeCategory(
         "MISC_NODES",

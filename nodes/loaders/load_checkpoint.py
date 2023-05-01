@@ -1,7 +1,7 @@
 import bpy
 
 from ...base_types.base_node import BaseNode
-from comfy.sd import load_checkpoint_guess_config
+from ComfyUI.comfy.sd import load_checkpoint_guess_config
 
 from pathlib import Path
 

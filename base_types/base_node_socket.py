@@ -161,6 +161,25 @@ class DiffusionSocketFloat(bpy.types.NodeSocket, BaseNodeSocket):
     def draw_color(self, context, node):
         return (0.4, 0.5, 0.6, 1)
 
+class DiffusionSocketImage(bpy.types.NodeSocket, BaseNodeSocket):
+    bl_idname = "DiffusionSocketImage"
+    bl_label = "Diffusion Node Socket Image"
+
+    def draw(self, context, layout, node, text):
+        layout.label(text='Image')
+
+    def draw_color(self, context, node):
+        return (0.12, 0.24, 0.5, 1)
+
+class DiffusionSocketLatent(bpy.types.NodeSocket, BaseNodeSocket):
+    bl_idname = "DiffusionSocketLatent"
+    bl_label = "Diffusion Node Socket Latent"
+
+    def draw(self, context, layout, node, text):
+        layout.label(text='Latent')
+
+    def draw_color(self, context, node):
+        return (0.82, 0.54, 0.3, 1)
 
 # class SdfNodeSocketPositiveFloat(bpy.types.NodeSocket, BaseNodeSocket):
 #     bl_idname = "SdfNodeSocketPositiveFloat"

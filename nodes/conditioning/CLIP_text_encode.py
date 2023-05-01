@@ -24,6 +24,9 @@ class CLIPTextEncodeNode(bpy.types.Node):
         self.outputs.new('DiffusionSocketConditioning', "Conditioning")
         self.width = BASIC_CLIP_TEXT_ENCODE_NODE_WIDTH
 
+    def compute(self, clip, text):
+        return ([[clip.encode(text), {}]], )
+
     # def draw_buttons(self, context, layout):
         # create a slider for int values
         # layout.prop(self, 'text', text='Text')
